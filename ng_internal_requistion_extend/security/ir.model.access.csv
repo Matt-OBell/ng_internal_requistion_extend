@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_requisition_multiple,multiple.requisition,ng_internal_requisition.model_purchase_requisition_multiple,base.group_user,1,1,1,0
+access_purchase_po,po,purchase.model_purchase_order,base.group_user,1,0,0,0
+access_hr_internal_l,internal.requisitionline,ng_internal_requisition.model_internal_requisition_line,base.group_user,1,1,1,1
+access_sub_account_employeel,sub.account.emp,model_sub_account,base.group_user,1,0,0,0
+access_product_budget_code_employeel,product.budget.code.emp,model_product_budget_code,base.group_user,1,0,0,0
+access_product_budget_code_irofficer,product.budget.code.irofficer,model_product_budget_code,ir_officer_group,1,0,0,0
+access_product_budget_code_account,product.budget.code.account,model_product_budget_code,account.group_account_user,1,1,1,1
+access_sub_account_sales,sub.account.sale,model_sub_account,base.group_sale_salesman,1,1,1,0
+access_sub_account_salesmanager,sub.account.salemanager,model_sub_account,base.group_sale_manager,1,1,1,1

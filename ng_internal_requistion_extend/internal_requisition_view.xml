@@ -1,0 +1,398 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+        <record id="product_normal_form_view_netcom_budget_type" model="ir.ui.view">
+            <field name="name">product.normal.form.budget type</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="list_price" position="after">
+                    <field name="budget_type"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_internal_requisition_tree_inherit_tree">
+            <field name="name">internal.requisition.inherited.tree</field>
+            <field name="type">form</field>
+            <field name="model">internal.requisition</field>
+            <field name="inherit_id" ref="ng_internal_requisition.view_internal_requisition_tree"/>
+            <field name="arch" type="xml">
+                <field name="manager_id" position="after">
+                    <field name="ir_officer_id" invisible="0"/>
+                    <field name="customer_id" invisible="0"/>
+                </field>
+                <field name="name" position="before">
+                    <field name="id" invisible="0"/>
+                </field>       
+                <field name="company_id" position="replace"/>         
+            </field>
+        </record>
+        
+        
+        <!--     Modified button views for new workflow -->
+        <record id="stock.view_picking_in_form_netcom" model="ir.ui.view">
+            <field name="name">stock.picking.in.form.netcom</field>
+            <field name="model">stock.picking.in</field>
+            <field name="inherit_id" ref="stock.view_picking_in_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/header/button[@string='Create Invoice/Refund']" position="replace">
+                    <button name="%(stock.action_stock_invoice_onshipping)d" string="Create Invoice/Refund" 
+                            attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}" 
+                            type="action" class="oe_highlight" groups="account.group_account_manager"/>
+                </xpath>
+            </field>
+        </record>
+
+		<record id="view_internal_po_simple_name" model="ir.ui.view">
+            <field name="name">Internal Purchase Order</field>
+            <field name="inherit_id" ref="ng_internal_requisition.view_internal_po"/>
+            <field name="model">internal.purchase.order</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				  <field name="location_id"  domain="[('usage','=','internal')]" colspan="4" position="replace">
+				  	<field name="location_id"  context="{'simple_name': True}" domain="[('usage','=','internal')]" colspan="4" />
+				  </field>
+            </field>
+        </record>    
+        
+        <record model="ir.ui.view" id="purchase_order_form_inherit_site_id">
+            <field name="name">purchase.order.form.inherit.site</field>
+            <field name="type">form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+<!--                    <field name="site_id" /-->
+                    <field name="type" />
+                    <field name="ir_number" />
+                </field>
+                <!--xpath expr="//button[@name='purchase_approve']" position="attributes">
+                    <attribute name="string">Approve By Budget Control</attribute>            
+                </xpath--><!--ng-->
+                <!--xpath expr="//button[@name='purchase_approve']" position="attributes">
+                    <attribute name="groups">ng_internal_requistion_extend.budget_manager_po</attribute>            
+                </xpath--><!--ng-->
+                <xpath expr="//button[@name='purchase_confirm']" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager</attribute>            
+                </xpath>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="purchase_order_form_inherit_site_id111">
+            <field name="name">purchase.order.form.inherit.site</field>
+            <field name="type">form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="ng_purchase_requisition.purchase_order_form_inherit"/>
+            <field name="arch" type="xml">
+                <xpath  expr="//field[@name='mrequisition_id']"   position="attributes">
+                    <attribute name="on_change">on_change_mrequisition_id(mrequisition_id)</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        
+        <record model="ir.ui.view" id="view_purchase_multiple_requisition_form_sit_id">
+            <field name="name">purchase.requisition.multiple.inherited.form</field>
+            <field name="type">form</field>
+            <field name="model">purchase.requisition.multiple</field>
+            <field name="inherit_id" ref="ng_purchase_requisition.view_purchase_multiple_requisition_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='policy_id']" position="after">
+                    <field name="ir_id" readonly="1"/>
+<!--                    <field name="site_id"  readonly="1"/-->
+                </xpath>
+                <xpath expr="//label[@for='name']" position="before">
+                     <label for="type" class="oe_edit_only"/>
+                     <field name="type"/>
+                 </xpath>
+            </field>
+        </record>
+
+		<record model="ir.ui.view" id="view_internal_requisition_inherited_form">
+	        <field name="name">internal.requisition.inherited.form</field>
+	        <field name="type">form</field>
+	        <field name="model">internal.requisition</field>
+	        <field name="inherit_id" ref="ng_internal_requisition.view_internal_requisition_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='user_id']" position="attributes">
+					<attribute name = "on_change">on_change_user_id(user_id)</attribute>
+	        	</xpath>
+	        	<xpath expr="//field[@name='user_id']" position="after">
+	        		<field name="employee_id" on_change="on_change_employee_id(employee_id)"/>
+	        	</xpath>
+	        	<!-- xpath expr="//field[@name='department_id']" position="attributes">
+					<attribute name = "readonly">1</attribute>
+	        	</xpath>
+	        	<xpath expr="//field[@name='manager_id']" position="attributes">
+					<attribute name = "readonly">1</attribute>
+	        	</xpath -->
+	        	<xpath expr="//field[@name='warehouse_id']" position="attributes">
+	        		<attribute name="groups">purchase.group_purchase_user,stock.group_stock_user,ng_internal_requistion_extend.ir_officer_group</attribute>
+	        	</xpath>
+	        	<xpath expr="//button[@name='cancel']" position="attributes">
+	        		<attribute name="groups">purchase.group_purchase_user,stock.group_stock_user,ng_internal_requistion_extend.department_manager_ir,ng_internal_requistion_extend.ir_officer_group</attribute>
+	        	</xpath>
+                <xpath expr="//button[@name='cancel']" position="attributes">
+                    <attribute name="states">draft,confirm,approve,waiting,approve_by_bill</attribute>
+                </xpath>
+	        	<xpath expr="//div[@class='oe_chatter']" position="attributes">
+	        		<attribute name="attrs">{'invisible': [('state', 'in', ('draft'))]}</attribute>
+	        	</xpath>
+                <xpath expr="//button[@name='approve']" position="attributes">
+                    <attribute name="groups">ng_internal_requistion_extend.department_manager_ir</attribute>            
+                </xpath>
+                <xpath expr="//button[@name='process']" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager,ng_internal_requistion_extend.ir_officer_group</attribute>            
+                </xpath>                
+	        	<xpath expr="//button[@name='approve']" position="after">
+	        		<button name="approve_by_department" colspan="2" class="oe_highlight" states="confirm" string="Approve by Department" type="object"  groups="ng_internal_requistion_extend.department_manager_ir" />        	
+	        	</xpath>
+                <xpath expr="//button[@name='approve']" position="after">
+                    <button name="approve_by_bill_control" colspan="2" class="oe_highlight" states="approve" string="Approve By Billing Control" type="object"  groups="ng_internal_requistion_extend.bill_manager_ir" />            
+                </xpath>
+	           <xpath expr="//button[@name='approve']" position="attributes">
+	               <attribute name="states">approve_by_dept</attribute>	
+	           </xpath>
+
+                <xpath expr="//button[@name='check_availability']" position="attributes">
+                    <attribute name="states">approve,waiting,approve_by_bill</attribute>    
+                </xpath>
+                <xpath expr="//button[@name='force_availability']" position="attributes">
+                    <attribute name="states">approve,waiting,approve_by_bill</attribute>    
+                </xpath>
+
+	        	<xpath expr="//field[@name='state']" position="replace">
+	        		<field name="state" colspan="2" statusbar_visible="draft,confirm,approve,waiting,approve_by_bill,delivery,ready,done,cancel" widget="statusbar" statusbar_colors='{"in_progress":"blue"}'/>        	
+	        	</xpath>
+	        	<xpath expr="//notebook/page[@string='Products']/field/tree[@string='Products']/field[@name='product_uom_id']" position="attributes">
+	        		<attribute name="groups">purchase.group_purchase_user,stock.group_stock_user,ng_internal_requistion_extend.ir_officer_group</attribute>        	
+	        	</xpath>
+	        	<xpath expr="//notebook/page[@string='Products']/field/form[@string='Products']/group/field[@name='product_uom_id']" position="attributes">
+	        		<attribute name="groups">purchase.group_purchase_user,stock.group_stock_user,ng_internal_requistion_extend.ir_officer_group</attribute>        	
+	        	</xpath>
+	        	
+	        	<xpath expr="//notebook/page[@string='Products']/field/tree[@string='Products']/field[@name='product_uom_id']" position="after">
+	        		<field name="forcase_qty" 
+	        		       groups="purchase.group_purchase_user,purchase.group_purchase_manager,ng_internal_requistion_extend.ir_officer_group"
+	        		       attrs="{'invisible':[('type','!=','product')]}"/>
+	        		<field name="available_qty" 
+	        		       groups="purchase.group_purchase_user,purchase.group_purchase_manager,ng_internal_requistion_extend.ir_officer_group"
+	        		       attrs="{'invisible':[('type','!=','product')]}"/>
+	        	</xpath>
+	        	<xpath expr="//notebook/page[@string='Products']/field/form[@string='Products']/group/field[@name='product_uom_id']" position="after">
+	        		<field name="forcase_qty" 
+	        		       attrs="{'invisible':[('type','!=','product')]}"
+	        		       groups="purchase.group_purchase_user,purchase.group_purchase_manager,ng_internal_requistion_extend.ir_officer_group"/>
+	        		<field name="available_qty" 
+	        		       attrs="{'invisible':[('type','!=','product')]}"
+	        		       groups="purchase.group_purchase_user,purchase.group_purchase_manager,ng_internal_requistion_extend.ir_officer_group" />        	
+	        	</xpath>
+				<xpath expr="//notebook/page[@string='Products']/field/tree[@string='Products']/field[@name='state']" position="after">
+	        		<field name="supplier_ids" groups="purchase.group_purchase_user,purchase.group_purchase_manager,ng_internal_requistion_extend.ir_officer_group" widget="many2many_tags" 
+	        				domain="[('supplier', '=', True)]"/>
+	        	</xpath><!--probuse new-->
+	        	<xpath expr="//notebook/page[@string='Products']/field/form[@string='Products']/group/field[@name='po_created']" position="after">
+	        		<field name="supplier_ids" groups="purchase.group_purchase_user,purchase.group_purchase_manager,ng_internal_requistion_extend.ir_officer_group" widget="many2many_tags" 
+	        				domain="[('supplier', '=', True)]"/>
+	        	</xpath><!--probuse new-->
+
+
+                <!--Budget-->
+                <xpath expr="//notebook/page[@string='Products']/field/tree[@string='Products']/field[@name='product_id']" position="before">
+                    <field name="type"  on_change="on_change_type(type)" readonly="0"/>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Products']/field/form[@string='Products']/group/field[@name='product_id']" position="before">
+                    <field name="type" on_change="on_change_type(type)"  readonly="0"/>
+                </xpath>
+                <!--Budget-->
+                <xpath expr="//notebook/page[@string='Products']/field/tree[@string='Products']/field[@name='product_id']" position="after">
+                    <field name="budget_code_id"
+                           on_change="onchange_budget_code_id(budget_code_id)"
+                            attrs="{'invisible':[('type', '!=', 'budget_code')]}"/>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Products']/field/form[@string='Products']/group/field[@name='product_id']" position="after">
+                    <field name="budget_code_id" 
+                            on_change="onchange_budget_code_id(budget_code_id)"
+                            attrs="{'invisible':[('type', '!=', 'budget_code')]}"/>
+                </xpath>
+                
+                
+                <!--Budget-->
+                <!--  <xpath expr="//notebook/page[@string='Products']/field/tree[@string='Products']/field[@name='product_id']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('type','!=','product')]}</attribute>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Products']/field/form[@string='Products']/group/field[@name='product_id']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('type','!=','product')]}</attribute>
+                </xpath> -->
+                
+                
+                <!--Budget-->
+                <xpath expr="//label[@for='name']" position="before">
+                    <label for="type" />
+                    <field name="type" />
+                </xpath>
+                <!--Budget-->
+                <xpath expr="//field[@name='line_ids']" position="attributes">
+                    <attribute name="context">{'default_type': type}</attribute>
+                </xpath>
+
+                <!--Budget-->
+                <!-- <xpath expr="//notebook/page[@string='Products']/field/tree[@string='Products']/field[@name='product_uom_id']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('type','!=','product')]}</attribute>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Products']/field/form[@string='Products']/group/field[@name='product_uom_id']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('type','!=','product')]}</attribute>
+                </xpath> -->
+
+                <!--Budget-->
+                <!-- <xpath expr="//notebook/page[@string='Products']/field/tree[@string='Products']/field[@name='item_code']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('type','!=','product')]}</attribute>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Products']/field/form[@string='Products']/group/field[@name='item_code']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('type','!=','product')]}</attribute>
+                </xpath> -->
+
+                <!--Budget-->
+                <!-- <xpath expr="//notebook/page[@string='Products']/field/tree[@string='Products']/field[@name='price_unit']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('type','!=','product')]}</attribute>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Products']/field/form[@string='Products']/group/field[@name='price_unit']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('type','!=','product')]}</attribute>
+                </xpath> -->
+                
+                <xpath expr="//field[@name='need_rfq']" position="after">
+                    <group>
+                    <field name="customer_id" attrs="{'invisible':[('type', '=', 'budget_code')], 'required':[('type', '=', 'product')]}" domain="[('customer','=',True)]"/>
+                    <!--field name="site_id" attrs="{'invisible':[('type', '=', 'budget_code')]}" domain="[('partner_id', '=', customer_id)]"/-->
+                    <!--field name="sars_ticket"/--><!--nonetcom-->
+                    <field name="ir_officer_id"/>
+                    <field name="is_split_po" groups="purchase.group_purchase_user,purchase.group_purchase_manager,ng_internal_requistion_extend.ir_officer_group"/><!--probuse new-->
+                    </group>
+                </xpath>
+                <xpath expr="//button[@string='Generate RFQ']" position="after">
+                    <button name="%(ng_internal_requistion_extend.action_internal_split_po)d" string="Split PO" 
+                        class="oe_highlight" groups="purchase.group_purchase_user,purchase.group_purchase_manager,ng_internal_requistion_extend.ir_officer_group"
+                        type="action"
+                        attrs="{'invisible':['|',('is_split_po', '=', False),('need_rfq','=', False)]}"></button>
+                </xpath><!--probuse new-->
+                <xpath expr="//button[@string='Generate RFQ']" position="after">
+                    <button name="reset_prev" string="Decline" 
+                        class="oe_highlight" groups="ng_internal_requistion_extend.department_manager_ir"
+                        type="object"
+                        states="approve"></button>
+                </xpath><!--probuse new-->				
+                <!--  <xpath expr="//button[@string='Generate RFQ']" position="after">
+                    <button name="reset_prev1" string="Reset" 
+                        class="oe_highlight" groups="ng_internal_requistion_extend.department_manager_ir"
+                        type="object"
+                        states="approve_by_dept"></button>
+                </xpath> --> <!--probuse new-->              
+                <xpath expr="//button[@string='Generate RFQ']" position="after">
+                    <button name="reset_prev2" string="Reset" 
+                        class="oe_highlight" groups="ng_internal_requistion_extend.bill_manager_ir"
+                        type="object"
+                        states="approve_by_bill"></button>
+                </xpath>
+
+                <xpath expr="//button[@string='Generate RFQ']" position="after">
+                    <button name="decline" string="Decline" 
+                        class="oe_highlight" groups="ng_internal_requistion_extend.department_manager_ir"
+                        type="object"
+                        states="approve_by_dept"></button>
+                </xpath><!--probuse new-->      
+                        
+                <xpath expr="//button[@string='Generate RFQ']" position="after">
+                    <button name="decline_draft" string="Decline" 
+                        class="oe_highlight" groups="ng_internal_requistion_extend.department_manager_ir"
+                        type="object"
+                        states="confirm"></button>
+                </xpath><!--probuse new-->              
+
+                <xpath expr="//button[@string='Generate RFQ']" position="attributes">
+                    <attribute name="attrs">{'invisible':['|',('is_split_po','=',True),('need_rfq','=', False)]}</attribute>
+                </xpath><!--probuse new-->
+                <xpath expr="//page[2]" position="attributes">
+                    <attribute name="attrs">{'invisible':[('is_split_po','=',True)]}</attribute>
+                </xpath><!--probuse new-->
+                <xpath expr="//field[@name='department_id']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='manager_id']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+        </field>
+        </record>
+
+        <menuitem id="ir_product_main_menu" 
+					name="Products" 
+					string="Products"
+					groups="purchase.group_purchase_user,stock.group_stock_user,ng_internal_requistion_extend.department_manager_ir,ng_internal_requistion_extend.ir_officer_group"
+					parent="ng_internal_requisition.menu_internal_requisition_head"
+				/>
+		<menuitem id="ir_product_category_menu" 
+					name="Products by Category"
+					action="product.product_category_action"
+					parent="ir_product_main_menu"
+					sequence="10"
+				/>
+		<menuitem id="ir_product_menu" 
+					name="Products" 
+					action="product.product_normal_action_sell"
+					parent="ir_product_main_menu"
+					sequence="11"
+				/>
+		
+
+        <record id="product_budget_code_form_view" model="ir.ui.view">
+            <field name="name">product.budget.code.view</field>
+            <field name="model">product.budget.code</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Budget Codes" version="7.0">
+                   <sheet>
+                    <group>
+                        <group>
+                            <field name="account_id" on_change="onchange_account(account_id)"/>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="product_budget_code_tree_view" model="ir.ui.view">
+            <field name="name">product.budget.code.view</field>
+            <field name="model">product.budget.code</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Budget Codes">
+                    <field name="account_id"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='product_budget_code_action' model='ir.actions.act_window'>
+            <field name='name'>Budget Codes</field>
+            <field name='res_model'>product.budget.code</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+        
+        <menuitem id="product_budget_code_menu" name="Budget Codes" parent="account_budget.next_id_pos" action='product_budget_code_action'/>
+
+
+
+	</data>
+</openerp>

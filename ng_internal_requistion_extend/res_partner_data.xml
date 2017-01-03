@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="sequence_account_no_partner_type" model="ir.sequence.type">
+            <field name="name">Partner Account Number</field>
+            <field name="code">partner.account.number</field>
+        </record>
+
+        <record id="sequence_account_no_partner" model="ir.sequence">
+            <field name="name">Partner Account Number</field>
+            <field name="code">partner.account.number</field>
+            <field eval="3" name="padding"/>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field name="prefix">MA</field>
+        </record>
+
+        <record id="sequence_account_no_sub_partner_type" model="ir.sequence.type">
+            <field name="name">Sub Partner Account Number</field>
+            <field name="code">sub.partner.account.number</field>
+        </record>
+
+        <record id="sequence_sub_account_no_partner" model="ir.sequence">
+            <field name="name">Sub Partner Account Number</field>
+            <field name="code">sub.partner.account.number</field>
+            <field eval="3" name="padding"/>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field name="prefix">SA</field>
+        </record>
+
+    </data>
+</openerp>

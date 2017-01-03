@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+		<!-- probuse -->	
+        <record id="view_partner_property_form_with" model="ir.ui.view">
+            <field name="name">res.partner.netcom.currency.partner</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority">36</field>
+            <field name="arch" type="xml">
+                <field name="credit" position="after">
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                </field>
+            </field>
+        </record><!-- probuse -->	
+        	
+    
+	
+        <!-- Partner Search View Modification For Customer Status -->
+	
+
+ 	<record id="view_partner_search_sub_acc" model="ir.ui.view">
+            <field name="name">view.partner.search.netcom</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+		<field name="name" position="after">
+  		   <field name="cust_status" filter_domain="[('cust_status','ilike',self)]"/>
+		</field>
+		<field name="category_id" position="after">
+                    <filter string="Active Customers"  domain="[('cust_status','=','active')]" help="Active Customers"/>
+		    <filter string="Suspended Customers" domain="[('cust_status','=','suspended')]" help="Suspended Customers"/>
+		    <filter string="Terminated Customers" domain="[('cust_status','=','terminated')]" help="Terminated Customers"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Partner View Modification For Account Number -->
+
+        <record id="view_partner_form_sub_accs" model="ir.ui.view">
+            <field name="name">view.partner.form.netcom</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <!-- #probuse19feb --><!--
+                <field name="category_id" position="after">
+                    <label for="parent_partner_id"/>
+                    <field name="parent_partner_id" on_change="onchange_parent_partner(parent_partner_id)"/>
+                </field>-->
+                
+                
+                
+                <field name="fax" position="after">
+                    <field name="parent_acc_no" attrs="{'invisible': [('customer','=',False)]}"/>
+                    <!--<field name="child_acc_no" attrs="{'invisible': [('customer','=',False)]}"/> -->
+                    <field name="cust_status"/>
+                </field>
+                <field name="website" position="after">
+                    <field name="cust_srv_no"/>
+                </field>
+            </field>
+        </record>
+        
+        <record id="view_partner_tree_sub_Acc" model="ir.ui.view">
+            <field name="name">view.partner.tree.netcom</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="parent_acc_no" />
+                </field>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

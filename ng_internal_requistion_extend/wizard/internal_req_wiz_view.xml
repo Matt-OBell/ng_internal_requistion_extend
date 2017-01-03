@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <!-- Internal Purchase Order -->
+        
+		<record id="view_internal_split_po" model="ir.ui.view">
+            <field name="name">Split Purchase Order</field>
+            <field name="model">po.split.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Split Purchae Order Lines" version="7.0">
+                 <label string="This operation is going to create multiple requisition." colspan="4"/>
+                  <footer>
+                        <button name="split_po" string="Split PO" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                	</footer>
+                </form>
+            </field>
+        </record>         
+
+        <record id="action_internal_split_po" model="ir.actions.act_window">
+            <field name="name">Split Purchase Order Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">po.split.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record> 
+	</data>
+</openerp>	

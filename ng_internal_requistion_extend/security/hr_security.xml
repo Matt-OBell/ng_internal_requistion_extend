@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+
+    <record id="department_manager_ir" context="{'noadmin':True}" model="res.groups">
+        <field name="name">Department Manager (IR Approval)</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="base.module_category_usability"/>
+    </record>
+
+    <record id="bill_manager_ir" context="{'noadmin':True}" model="res.groups">
+        <field name="name">Billing Control Officer (IR)</field>
+        <field name="implied_ids" eval="[(4, ref('account.group_account_user'))]"/>
+        <field name="category_id" ref="base.module_category_usability"/>
+    </record>
+    
+    <!--record id="budget_manager_po" context="{'noadmin':True}" model="res.groups">
+        <field name="name">Budget Control Officer (PO)</field>
+        <field name="implied_ids" eval="[(4, ref('account.group_account_user'))]"/>
+        <field name="category_id" ref="base.module_category_usability"/>
+    </record-->
+
+    <record id="ir_officer_group" context="{'noadmin':True}" model="res.groups">
+        <field name="name">IR Officer</field>
+        <field name="implied_ids" eval="[(4, ref('purchase.group_purchase_user')), (4, ref('stock.group_stock_user'))]"/>
+        <field name="category_id" ref="base.module_category_usability"/>
+    </record>
+    
+    <record id="property_rule_department_ir" model="ir.rule">
+        <field name="name">Internal Requistion - Department Manager</field>
+        <field model="ir.model" name="model_id" ref="model_internal_requisition"/>
+        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id.parent_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('department_manager_ir'))]"/>
+    </record>
+
+</data>
+</openerp>

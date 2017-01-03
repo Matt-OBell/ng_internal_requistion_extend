@@ -1,0 +1,123 @@
+
+<openerp>
+    <data>
+        <!-- #probuse19feb -->
+        <record model="ir.ui.view" id="view_sub_account_form">
+            <field name="name">Sub Accounts</field>
+            <field name="model">sub.account</field>
+            <field name="arch" type="xml">
+                <form string="Sub Accounts"  version="7.0">
+                    <header>
+                        <button string="Activate" name="active" states="new" type="object" groups="base.group_user" class="oe_highlight"/>
+                        <button string="Suspend" name="suspended" states="active" type="object" groups="base.group_user" />
+                        <button string="Terminate" name="terminated"  states="active" type="object" groups="base.group_user"/>
+                        <button string="Cancel" name="cancel"  states="active,suspended,terminated" type="object" groups="base.group_user"/>
+                        <button string="Reset"  name="new" states="suspended,terminated,cancel" type="object" groups="base.group_user"/>
+                        <field name="state" widget="statusbar" statusbar_visible="new,active,suspended,terminated,cancel" statusbar_colors='{"active":"blue","new":"blue","suspended":"red"}'/>
+                    </header>
+                    <sheet>
+                    <group col="4">
+                        <label for="partner_id"/>
+                        <h1><field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer', '=', True),('cust_status', '!=', 'terminated'),('is_company', '=', True)]"/></h1>
+                        <field name="parent_account_number" />
+                        <field name="name" colspan="4"/>
+                        <field name="desc"/>
+                        <field name="user_id"/>
+                        <field name="date" />
+                        <field name="active_date" />
+                        <field name="number"/>
+                        <newline/>
+                        <field name="notes2" placeholder="Notes..."  colspan="4"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/><newline/>
+                        <field name="contact_name"/>
+                    </group>
+                    <group>
+                        <label for="street" string="Address"/>
+                        <div>
+                            <field name="street" placeholder="Street..." />
+                            <field name="street2" />
+                            <div class="address_format">
+                                <field name="city_id" placeholder="Select City..." on_change="on_change_city(city_id)" />
+                                <field name="city" invisible="1" placeholder="City" style="width: 40%%" />
+<field name="state_id" domain="[('country_id','=',country_id)]" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                <field name="zip" placeholder="ZIP" style="width: 20%%" />
+                            </div>
+                            <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
+
+                        </div>
+                        <field name="website" widget="url" placeholder="e.g. www.mattobell.com"/>
+                    </group>
+                    <group>
+                        <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
+                        <field name="mobile"/>
+                        <field name="fax"/>
+                        <field name="email" widget="email"/>
+                    </group>
+                    
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>                    
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_sub_account_tree">
+            <field name="name">Sub Accounts</field>
+            <field name="model">sub.account</field>
+            <field name="arch" type="xml">
+                <tree string="Sub Accounts">
+                        <field name="parent_account_number" />
+                        <field name="partner_id"/>
+                        <field name="number" />
+                        <field name="name"/>
+                        <field name="contact_name"/>
+                        <field name="phone"/>
+                        <field name="email"/>
+                        <field name="date" />
+                        <field name="country" invisible="1"/>
+                        <field name="country_id" invisible="1"/>
+                        <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_sub_account_search">
+            <field name="name">Sub Accounts</field>
+            <field name="model">sub.account</field>
+            <field name="arch" type="xml">
+                <search string="Sub Accounts">
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="number" />
+                        <field name="contact_name"/>
+                        <field name="parent_account_number" />
+                        <field name="date" />
+                        <field name="phone"/>
+                        <field name="email"/>
+                        <field name="country" />
+                        <field name="country_id" />
+                        <field name="state"/>
+                   <group expand="0" string="Group By...">
+                       <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
+                       <filter string="Company" context="{'group_by': 'company_id'}"/>
+                       <filter string="Country" context="{'group_by': 'country_id'}"/>
+                       <filter string="Customer" context="{'group_by': 'partner_id'}"/>
+                       <filter string="Status" context="{'group_by': 'state'}"/>
+                   </group>
+                        
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_sub_account">
+            <field name="name">Sub Accounts</field>
+            <field name="res_model">sub.account</field>
+            <field name="view_type">form</field>
+        </record>
+        <menuitem name="Sub Accounts" id="menu_root_sub_account" action="action_sub_account" parent="base.menu_sales" sequence="1" />
+        <menuitem id="menu_root_sub_account_account" name="Sub Accounts"
+            parent="account.menu_finance_receivables"
+            action="action_sub_account" sequence="500"/>
+    </data>
+</openerp>
